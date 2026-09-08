@@ -1,0 +1,6 @@
+{
+  "name": "Landsafe NER",
+  "description": "AI-Powered Landslide Risk Monitoring & Early Warning System for the North Eastern Region of India.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

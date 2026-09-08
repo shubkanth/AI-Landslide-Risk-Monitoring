@@ -80,7 +80,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] text-[#172033] flex flex-col font-sans selection:bg-[#2F80ED] selection:text-white">
+    <div className="h-screen h-[100dvh] max-h-screen overflow-hidden bg-[#F6F8FB] text-[#172033] flex flex-col font-sans selection:bg-[#2F80ED] selection:text-white">
       {/* Top Navbar */}
       <Navbar
         activeTab={activeTab}
@@ -95,7 +95,7 @@ export default function App() {
       />
 
       {/* Main Body */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Sidebar */}
         <Sidebar
           activeTab={activeTab}
@@ -104,7 +104,7 @@ export default function App() {
         />
 
         {/* Content Viewport */}
-        <main className="flex-1 overflow-y-auto flex flex-col bg-[#F6F8FB]">
+        <main className="flex-1 overflow-y-auto flex flex-col bg-[#F6F8FB] min-h-0">
           {/* Top Metric Bar (Present on Map & Hotspots tabs) */}
           {(activeTab === 'map' || activeTab === 'hotspots') && (
             <div className="bg-white border-b border-slate-200 px-4 py-2 shadow-2xs">

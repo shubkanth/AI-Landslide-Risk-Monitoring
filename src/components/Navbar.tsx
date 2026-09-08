@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeCriticalCount
 }) => {
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-xs">
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-xs shrink-0">
       {/* Top Advisory Ticker (Subtle GovTech bar, calm colors) */}
       <div className="bg-[#0F2747] text-white px-4 py-1.5 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">

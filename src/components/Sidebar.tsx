@@ -46,7 +46,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-60 bg-[#0F2747] text-white flex flex-col justify-between shrink-0 hidden md:flex border-r border-[#173860]">
+    <aside className="w-60 bg-[#0F2747] text-white flex flex-col justify-between shrink-0 hidden md:flex border-r border-[#173860] h-full sticky top-0 overflow-y-auto z-20 select-none">
       <div className="p-3.5 space-y-4">
         {/* Navigation Category Label */}
         <div className="px-2 pt-1">

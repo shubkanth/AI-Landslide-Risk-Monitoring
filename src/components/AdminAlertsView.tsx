@@ -5,15 +5,12 @@ import {
   BellRing, 
   ShieldAlert, 
   Send, 
-  Radio, 
   AlertTriangle, 
   CheckCircle2, 
   Download, 
-  FileText,
-  Clock,
-  MapPin,
-  Flame,
-  CloudRain
+  Clock, 
+  MapPin, 
+  ExternalLink 
 } from 'lucide-react';
 
 interface AdminAlertsViewProps {
@@ -40,7 +37,7 @@ export const AdminAlertsView: React.FC<AdminAlertsViewProps> = ({
       timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
       alertLevel: risk.alertLevel,
       riskScore: risk.score,
-      triggerReason: `${risk.topFactors[0]?.displayName} (${risk.topFactors[0]?.value}) on ${loc.slope}Â° slope`,
+      triggerReason: `${risk.topFactors[0]?.displayName} (${risk.topFactors[0]?.value}) on ${loc.slope}° slope`,
       recommendedAction: risk.recommendedAction,
       rainfall24h: loc.rainfall24h,
       slope: loc.slope
@@ -87,96 +84,96 @@ export const AdminAlertsView: React.FC<AdminAlertsViewProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
-      {/* Top Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="max-w-6xl mx-auto space-y-4">
+      {/* Top Header Card */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-red-400 text-xs font-semibold uppercase tracking-wider">
-            <Radio className="w-4 h-4 animate-pulse text-red-500" />
-            <span>Disaster Management Authority (DDMA / SDMA) Operational Feed</span>
+          <div className="flex items-center gap-2 text-red-600 text-xs font-semibold uppercase tracking-wider">
+            <BellRing className="w-4 h-4" />
+            <span>Disaster Management Authority (DDMA / SDMA) Feed</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white mt-1">
-            Early Warning Dispatch & Incident Escalation Center
+          <h1 className="text-xl sm:text-2xl font-bold text-[#0F2747] mt-1">
+            Early Warning Advisories & Incident Queue
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#64748B] mt-1">
             Real-time threshold triggers evaluated against Caine rainfall-intensity curves and topographic susceptibility indices.
           </p>
         </div>
 
         <button
           onClick={handleExportSITREP}
-          className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 transition-colors self-start md:self-auto"
+          className="bg-[#0F2747] hover:bg-[#176B87] text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors self-start md:self-auto shadow-xs"
         >
-          <Download className="w-4 h-4 text-emerald-400" />
+          <Download className="w-4 h-4 text-[#2F80ED]" />
           <span>Export SITREP (JSON)</span>
         </button>
       </div>
 
       {/* KPI Alert Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-slate-900 border border-red-500/30 rounded-2xl p-4 flex items-center justify-between shadow-lg shadow-red-950/20">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-semibold text-red-400 uppercase tracking-wider block">
+            <span className="text-[10px] font-semibold text-red-600 uppercase tracking-wider block">
               Critical Alerts
             </span>
-            <span className="text-2xl font-black text-white font-mono">{criticalCount}</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Immediate DDMA Action</span>
+            <span className="text-2xl font-bold text-red-600 font-mono mt-0.5 block">{criticalCount}</span>
+            <span className="text-[11px] text-[#64748B]">Immediate Action Required</span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400">
-            <AlertTriangle className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold">
+            !
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-orange-500/30 rounded-2xl p-4 flex items-center justify-between">
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-semibold text-orange-400 uppercase tracking-wider block">
+            <span className="text-[10px] font-semibold text-orange-600 uppercase tracking-wider block">
               Warning Alerts
             </span>
-            <span className="text-2xl font-black text-white font-mono">{warningCount}</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">High Vigilance & Patrol</span>
+            <span className="text-2xl font-bold text-orange-600 font-mono mt-0.5 block">{warningCount}</span>
+            <span className="text-[11px] text-[#64748B]">High Vigilance Patrols</span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-orange-400">
-            <ShieldAlert className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+            ▲
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-amber-500/30 rounded-2xl p-4 flex items-center justify-between">
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider block">
+            <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider block">
               Watch Alerts
             </span>
-            <span className="text-2xl font-black text-white font-mono">{watchCount}</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Drainage & Pre-monsoon</span>
+            <span className="text-2xl font-bold text-amber-600 font-mono mt-0.5 block">{watchCount}</span>
+            <span className="text-[11px] text-[#64748B]">Culvert & Drainage Checks</span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <Clock className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+            ⏱
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
+        <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider block">
+            <span className="text-[10px] font-semibold text-[#0F2747] uppercase tracking-wider block">
               Total Monitored
             </span>
-            <span className="text-2xl font-black text-white font-mono">{locations.length}</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Across 8 NER States</span>
+            <span className="text-2xl font-bold text-[#0F2747] font-mono mt-0.5 block">{locations.length}</span>
+            <span className="text-[11px] text-[#64748B]">Across 8 NER States</span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-lg bg-blue-50 text-[#2F80ED] flex items-center justify-center font-bold">
+            ✓
           </div>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
         {['All', 'CRITICAL', 'WARNING', 'WATCH'].map((lvl) => (
           <button
             key={lvl}
             onClick={() => setFilterAlertLevel(lvl)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
               filterAlertLevel === lvl
-                ? 'bg-slate-200 text-slate-900 shadow'
-                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                ? 'bg-[#0F2747] text-white shadow-xs'
+                : 'bg-white text-[#64748B] hover:text-[#0F2747] border border-slate-200'
             }`}
           >
             {lvl === 'All' ? 'All Active Hazards' : `${lvl} Only`}
@@ -184,109 +181,91 @@ export const AdminAlertsView: React.FC<AdminAlertsViewProps> = ({
         ))}
       </div>
 
-      {/* Broadcast Flash Message */}
-      {broadcastSent && (
-        <div className="bg-emerald-950/80 border border-emerald-500/50 p-3.5 rounded-xl text-xs text-emerald-300 flex items-center gap-2.5 animate-in fade-in">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-          <span>
-            CAP Advisory Dispatched! Simulated broadcast sent via SMS Gateway & Disaster Management Control Room radio for alert ID: {broadcastSent}.
-          </span>
-        </div>
-      )}
-
-      {/* Alerts Cards List */}
-      <div className="space-y-4">
+      {/* Alerts List (Clean GovTech Cards) */}
+      <div className="space-y-3">
         {filteredAlerts.map((alert) => {
-          const loc = locations.find((l) => l.id === alert.locationId);
           const isCritical = alert.alertLevel === 'CRITICAL';
           const isWarning = alert.alertLevel === 'WARNING';
+          const targetLoc = locations.find((l) => l.id === alert.locationId);
 
           return (
-            <div
+            <div 
               key={alert.id}
-              className={`bg-slate-900 border rounded-2xl p-4 sm:p-5 space-y-3 transition-all ${
-                isCritical
-                  ? 'border-red-500/40 bg-gradient-to-r from-red-950/20 via-slate-900 to-slate-900'
-                  : isWarning
-                  ? 'border-orange-500/30'
-                  : 'border-slate-800'
-              }`}
+              className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs hover:border-[#2F80ED] transition-colors space-y-3"
             >
-              {/* Alert Card Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
                 <div className="flex items-center gap-2.5">
-                  <span
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
-                      isCritical
-                        ? 'bg-red-600 text-white animate-pulse'
-                        : isWarning
-                        ? 'bg-orange-500 text-slate-950'
-                        : 'bg-amber-500 text-slate-950'
-                    }`}
-                  >
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    isCritical 
+                      ? 'bg-red-50 text-red-700 border-red-200'
+                      : isWarning
+                      ? 'bg-orange-50 text-orange-700 border-orange-200'
+                      : 'bg-amber-50 text-amber-700 border-amber-200'
+                  }`}>
                     {alert.alertLevel} ADVISORY
                   </span>
-                  <h3 className="font-bold text-white text-sm sm:text-base">
+                  <h3 className="font-bold text-sm text-[#0F2747]">
                     {alert.locationName}
                   </h3>
-                  <span className="text-xs text-slate-400">
-                    ({alert.district}, {alert.state})
+                  <span className="text-xs text-[#64748B]">
+                    {alert.district}, {alert.state}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 font-mono text-xs text-slate-400">
-                  <Clock className="w-3.5 h-3.5" />
-                  <span>{alert.timestamp} IST</span>
-                  <span className="text-slate-600">â€¢</span>
-                  <span className="font-bold text-white">Risk: {alert.riskScore}/100</span>
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="font-mono text-slate-400 text-[11px]">{alert.timestamp} IST</span>
+                  <span className="font-mono font-bold text-sm text-[#0F2747]">
+                    Risk: {alert.riskScore}/100
+                  </span>
                 </div>
               </div>
 
-              {/* Grid with Trigger Details */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 space-y-1">
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase">Trigger Cause:</span>
-                  <p className="text-slate-200 font-medium">{alert.triggerReason}</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-[#172033]">
+                <div>
+                  <span className="text-[#64748B] block text-[11px]">Hazard Trigger Condition:</span>
+                  <p className="font-medium text-[#0F2747] mt-0.5">{alert.triggerReason}</p>
                 </div>
-
-                <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 space-y-1">
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase">Hydromet & Slope:</span>
-                  <p className="text-slate-200 font-medium">
-                    24h Rain: <strong className="text-sky-400">{alert.rainfall24h} mm</strong> | Slope: <strong className="text-white">{alert.slope}Â°</strong>
-                  </p>
+                <div>
+                  <span className="text-[#64748B] block text-[11px]">Rainfall (24h) & Slope:</span>
+                  <p className="font-medium text-[#0F2747] mt-0.5">{alert.rainfall24h} mm • {alert.slope}° Incline</p>
                 </div>
-
-                <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 space-y-1">
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase">Geotechnical Protocol:</span>
-                  <p className="text-slate-300 text-[11px] leading-relaxed line-clamp-2">
-                    {alert.recommendedAction}
-                  </p>
+                <div>
+                  <span className="text-[#64748B] block text-[11px]">DDMA Standard Operating Procedure:</span>
+                  <p className="font-medium text-[#172033] mt-0.5">{alert.recommendedAction}</p>
                 </div>
               </div>
 
-              {/* Actions Footer */}
-              <div className="flex flex-wrap items-center justify-between pt-1 gap-2">
-                <div className="text-[10px] text-amber-400/80 italic">
-                  *Advisory generated by Landsafe NER statistical hazard classifier for decision support.
-                </div>
+              {/* Actions */}
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
                 <div className="flex items-center gap-2">
-                  {loc && (
-                    <button
-                      onClick={() => onSelectLocation(loc)}
-                      className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
-                    >
-                      <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Inspect On Map</span>
-                    </button>
-                  )}
                   <button
                     onClick={() => handleSimulateBroadcast(alert)}
-                    className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition-all"
+                    disabled={broadcastSent === alert.id}
+                    className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#0F2747] font-semibold text-xs transition-colors flex items-center gap-1.5 border border-slate-200"
                   >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>Dispatch Alert (CAP Protocol)</span>
+                    {broadcastSent === alert.id ? (
+                      <>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700 font-bold">Dispatched to District Police & SDRF</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-3.5 h-3.5 text-[#2F80ED]" />
+                        <span>Dispatch DDMA SMS/CAP Alert</span>
+                      </>
+                    )}
                   </button>
                 </div>
+
+                {targetLoc && (
+                  <button
+                    onClick={() => onSelectLocation(targetLoc)}
+                    className="text-xs text-[#2F80ED] hover:underline font-semibold flex items-center gap-1"
+                  >
+                    <span>View Location on Map</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             </div>
           );

@@ -10,7 +10,8 @@ import {
   Filter,
   ShieldCheck,
   AlertTriangle,
-  FileDown
+  FileDown,
+  ChevronRight
 } from 'lucide-react';
 
 interface HotspotsRankingProps {
@@ -65,41 +66,41 @@ export const HotspotsRanking: React.FC<HotspotsRankingProps> = ({
 
   const getBadge = (cat: string) => {
     switch (cat) {
-      case 'VERY_HIGH': return 'bg-red-500/15 text-red-400 border-red-500/30';
-      case 'HIGH': return 'bg-orange-500/15 text-orange-400 border-orange-500/30';
-      case 'MODERATE': return 'bg-amber-500/15 text-amber-400 border-amber-500/30';
-      default: return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
+      case 'VERY_HIGH': return 'bg-red-50 text-red-700 border-red-200';
+      case 'HIGH': return 'bg-orange-50 text-orange-700 border-orange-200';
+      case 'MODERATE': return 'bg-amber-50 text-amber-700 border-amber-200';
+      default: return 'bg-emerald-50 text-emerald-700 border-emerald-200';
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
-      {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="max-w-6xl mx-auto space-y-4">
+      {/* Header Card */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-rose-400 text-xs font-semibold uppercase tracking-wider">
-            <Flame className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[#2F80ED] text-xs font-semibold uppercase tracking-wider">
+            <MapPin className="w-4 h-4" />
             <span>Hazard Priority Matrix</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white mt-1">
-            North Eastern Region Risk Hotspots
+          <h1 className="text-xl sm:text-2xl font-bold text-[#0F2747] mt-1">
+            Locations & Risk Hotspots Inventory
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#64748B] mt-1">
             Ranked vulnerability index based on real-time hydrometeorological triggers and static slope mechanics across all 8 NER states.
           </p>
         </div>
 
-        {/* Export / Count Badge */}
+        {/* Count Badge */}
         <div className="flex items-center gap-3">
-          <span className="text-xs font-mono px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300">
-            Total Monitored: <strong className="text-white">{filtered.length}</strong>
+          <span className="text-xs font-mono px-3 py-1.5 rounded-lg bg-[#F6F8FB] border border-slate-200 text-[#172033]">
+            Total Monitored: <strong className="text-[#0F2747]">{filtered.length}</strong>
           </span>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2.5 flex-1 max-w-xl">
+      <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 flex-1 max-w-2xl">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -107,14 +108,14 @@ export const HotspotsRanking: React.FC<HotspotsRankingProps> = ({
               placeholder="Filter by sector, district, highway..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700/80 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="w-full bg-[#F6F8FB] border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-xs text-[#172033] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2F80ED]/30 focus:border-[#2F80ED]"
             />
           </div>
 
           <select
             value={filterState}
             onChange={(e) => setFilterState(e.target.value)}
-            className="bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 cursor-pointer"
+            className="bg-[#F6F8FB] border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-[#172033] font-medium focus:outline-none focus:ring-2 focus:ring-[#2F80ED]/30 cursor-pointer"
           >
             <option value="All">All States</option>
             <option value="Assam">Assam</option>
@@ -130,7 +131,7 @@ export const HotspotsRanking: React.FC<HotspotsRankingProps> = ({
           <select
             value={filterLevel}
             onChange={(e) => setFilterLevel(e.target.value)}
-            className="bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 cursor-pointer"
+            className="bg-[#F6F8FB] border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-[#172033] font-medium focus:outline-none focus:ring-2 focus:ring-[#2F80ED]/30 cursor-pointer"
           >
             <option value="All">All Risk Levels</option>
             <option value="VERY_HIGH">Very High Only</option>
@@ -142,87 +143,80 @@ export const HotspotsRanking: React.FC<HotspotsRankingProps> = ({
 
         <button
           onClick={() => setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc')}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-200 font-medium transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F6F8FB] hover:bg-slate-100 border border-slate-200 text-xs text-[#0F2747] font-medium transition-colors"
         >
-          <ArrowUpDown className="w-3.5 h-3.5" />
-          <span>Sort: {sortDirection === 'desc' ? 'Highest First' : 'Lowest First'}</span>
+          <ArrowUpDown className="w-3.5 h-3.5 text-[#2F80ED]" />
+          <span>Sort: {sortDirection === 'desc' ? 'Highest Risk First' : 'Lowest Risk First'}</span>
         </button>
       </div>
 
       {/* Hotspots Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800 text-[11px] uppercase tracking-wider">
+            <thead className="bg-[#F6F8FB] text-[#64748B] font-semibold border-b border-slate-200 text-[11px] uppercase tracking-wider">
               <tr>
                 <th className="p-3.5 text-center w-12">#</th>
                 <th className="p-3.5">Monitored Sector</th>
                 <th className="p-3.5">State & District</th>
+                <th className="p-3.5 text-center">Slope</th>
+                <th className="p-3.5 text-center">24h Rain</th>
+                <th className="p-3.5">Primary Hazard Driver</th>
                 <th className="p-3.5 text-center">Risk Score</th>
-                <th className="p-3.5">Risk Level</th>
-                <th className="p-3.5">Main Contributing Driver</th>
-                <th className="p-3.5">24h Rain / Slope</th>
+                <th className="p-3.5 text-center">Advisory</th>
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
-              {filtered.map((item, idx) => (
+            <tbody className="divide-y divide-slate-100 text-[#172033]">
+              {filtered.map((item, index) => (
                 <tr 
-                  key={item.location.id} 
-                  className="hover:bg-slate-800/40 transition-colors group"
+                  key={item.location.id}
+                  className="hover:bg-[#F6F8FB] transition-colors group cursor-pointer"
+                  onClick={() => onSelectLocation(item.location)}
                 >
-                  <td className="p-3.5 text-center font-mono font-bold text-slate-400">
-                    {idx + 1}
+                  <td className="p-3.5 text-center font-mono text-[#64748B] text-xs">
+                    {index + 1}
                   </td>
-                  <td className="p-3.5">
-                    <div className="font-semibold text-slate-200 group-hover:text-emerald-300 transition-colors">
-                      {item.location.name}
-                    </div>
-                    <div className="text-[10px] text-slate-400">
-                      {item.location.geology.split(' ')[0]} bedrock â€¢ {item.location.elevation}m
-                    </div>
+                  <td className="p-3.5 font-bold text-[#0F2747] group-hover:text-[#2F80ED] transition-colors">
+                    {item.location.name}
                   </td>
-                  <td className="p-3.5">
-                    <div className="text-slate-300 font-medium">{item.location.district}</div>
-                    <div className="text-[10px] text-slate-400">{item.location.state}</div>
+                  <td className="p-3.5 text-[#64748B]">
+                    <span className="font-medium text-[#172033]">{item.location.district}</span>, {item.location.state}
+                  </td>
+                  <td className="p-3.5 text-center font-mono font-medium">
+                    {item.location.slope}°
+                  </td>
+                  <td className="p-3.5 text-center font-mono font-medium text-[#0F2747]">
+                    {item.location.rainfall24h} mm
+                  </td>
+                  <td className="p-3.5 text-[#64748B]">
+                    <span className="font-medium text-[#172033]">{item.primaryDriver}</span>
+                    <span className="text-[11px] text-slate-400 block">{item.driverValue}</span>
                   </td>
                   <td className="p-3.5 text-center">
-                    <span className="font-mono text-base font-black text-white">
+                    <span className="font-mono font-bold text-sm text-[#0F2747]">
                       {item.score}
                     </span>
-                    <span className="text-[10px] text-slate-400 block font-sans">
-                      Conf: {item.confidence}%
+                    <span className="text-[10px] text-slate-400 font-normal">/100</span>
+                  </td>
+                  <td className="p-3.5 text-center">
+                    <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border ${getBadge(item.category)}`}>
+                      {item.category.replace('_', ' ')}
                     </span>
                   </td>
-                  <td className="p-3.5">
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide border ${getBadge(item.category)}`}>
-                      {item.category}
-                    </span>
-                  </td>
-                  <td className="p-3.5">
-                    <div className="text-slate-300 font-medium">{item.primaryDriver}</div>
-                    <div className="text-[10px] text-slate-400 font-mono">{item.driverValue}</div>
-                  </td>
-                  <td className="p-3.5 font-mono text-[11px] text-slate-300">
-                    <div>{item.location.rainfall24h} mm</div>
-                    <div className="text-slate-400 text-[10px]">{item.location.slope}Â° Slope</div>
-                  </td>
-                  <td className="p-3.5 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <button
-                        onClick={() => onSelectLocation(item.location)}
-                        className="px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/30 text-[11px] font-medium transition-all"
-                      >
-                        Analyze
-                      </button>
-                      <button
-                        onClick={() => onOpenSimulation(item.location)}
-                        title="Simulate Rainfall on this slope"
-                        className="p-1 rounded-lg bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-slate-950 border border-slate-700 transition-all"
-                      >
-                        <Sliders className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                  <td className="p-3.5 text-right space-x-2" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      onClick={() => onSelectLocation(item.location)}
+                      className="px-2.5 py-1 rounded-lg bg-[#0F2747] hover:bg-[#176B87] text-white text-xs font-medium transition-colors shadow-xs"
+                    >
+                      View Map
+                    </button>
+                    <button
+                      onClick={() => onOpenSimulation(item.location)}
+                      className="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-[#0F2747] text-xs font-medium transition-colors"
+                    >
+                      Simulate
+                    </button>
                   </td>
                 </tr>
               ))}

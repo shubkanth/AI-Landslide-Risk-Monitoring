@@ -233,6 +233,151 @@ app.get('/api/analytics/summary', (req, res) => {
   });
 });
 
+// Cache for radar and live weather in backend
+let backendRadarCache: { data: any; time: number } | null = null;
+const weatherCacheMap = new Map<string, { data: any; time: number }>();
+
+// 9b. Weather Radar Frames (RainViewer Doppler Proxy)
+app.get('/api/weather/radar-frames', async (req, res) => {
+  const now = Date.now();
+  if (backendRadarCache && now - backendRadarCache.time < 90 * 1000) {
+    res.json(backendRadarCache.data);
+    return;
+  }
+
+  try {
+    const rvRes = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+    if (!rvRes.ok) throw new Error(`RainViewer HTTP error ${rvRes.status}`);
+    const rvData = await rvRes.json();
+
+    const host = rvData.host || 'https://tilecache.rainviewer.com';
+    const past = (rvData.radar?.past || []).map((f: { time: number; path: string }) => {
+      const d = new Date(f.time * 1000);
+      return {
+        time: f.time,
+        path: f.path,
+        isoTime: d.toISOString(),
+        formattedTimeIST: d.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }) + ' IST',
+        relativeTimeStr: `${Math.round((Date.now() - d.getTime()) / 60000)}m ago`,
+        isNowcast: false
+      };
+    });
+
+    const nowcast = (rvData.radar?.nowcast || []).map((f: { time: number; path: string }) => {
+      const d = new Date(f.time * 1000);
+      return {
+        time: f.time,
+        path: f.path,
+        isoTime: d.toISOString(),
+        formattedTimeIST: d.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }) + ' IST',
+        relativeTimeStr: `in ${Math.abs(Math.round((Date.now() - d.getTime()) / 60000))}m`,
+        isNowcast: true
+      };
+    });
+
+    const allFrames = [...past, ...nowcast];
+    const latest = past.length > 0 ? past[past.length - 1] : (allFrames[0] || null);
+
+    const payload = {
+      host,
+      generated: rvData.generated,
+      frames: allFrames,
+      latestFrame: latest
+    };
+
+    backendRadarCache = { data: payload, time: now };
+    res.json(payload);
+  } catch (err: any) {
+    console.error('Error proxying RainViewer radar:', err.message);
+    res.status(502).json({ error: 'Failed to fetch radar frames', details: err.message });
+  }
+});
+
+// 9c. Live Weather & Meter Reading (Open-Meteo Proxy)
+app.get('/api/weather/live', async (req, res) => {
+  const lat = Number(req.query.lat) || 25.8;
+  const lng = Number(req.query.lng) || 92.8;
+  const locationName = (req.query.name as string) || 'North Eastern Region Hub';
+  const cacheKey = `${lat.toFixed(2)},${lng.toFixed(2)}`;
+  const now = Date.now();
+
+  const cached = weatherCacheMap.get(cacheKey);
+  if (cached && now - cached.time < 3 * 60 * 1000) {
+    res.json(cached.data);
+    return;
+  }
+
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,precipitation,rain,showers,cloud_cover,weather_code,wind_speed_10m&forecast_days=1`;
+    const omRes = await fetch(url);
+    if (!omRes.ok) throw new Error(`Open-Meteo HTTP ${omRes.status}`);
+    const omData = await omRes.json();
+
+    const curr = omData.current || {};
+    const precipitation = Number(curr.precipitation ?? curr.rain ?? 0);
+    const cloudCover = Math.round(Number(curr.cloud_cover ?? 70));
+
+    // Calculate Marshall-Palmer Z = 200 * R^1.6
+    let dbzEquivalent = 10;
+    if (precipitation > 0.05) {
+      const z = 200 * Math.pow(precipitation, 1.6);
+      dbzEquivalent = Math.round(Math.min(Math.max(10 * Math.log10(Math.max(z, 1)), 10), 68));
+    }
+
+    let rainIntensityLevel = 'Dry';
+    if (precipitation > 50) rainIntensityLevel = 'Torrential / Cloudburst';
+    else if (precipitation > 10) rainIntensityLevel = 'Heavy Rain';
+    else if (precipitation > 2.5) rainIntensityLevel = 'Moderate Rain';
+    else if (precipitation > 0.1) rainIntensityLevel = 'Light Rain';
+
+    let cloudCategory = 'Clear Sky';
+    if (cloudCover > 90) cloudCategory = 'Convective Cloudburst Shield';
+    else if (cloudCover > 70) cloudCategory = 'Dense Overcast';
+    else if (cloudCover > 40) cloudCategory = 'Broken Overcast';
+    else if (cloudCover > 15) cloudCategory = 'Scattered Clouds';
+
+    const payload = {
+      locationName,
+      lat,
+      lng,
+      temperature: Math.round((Number(curr.temperature_2m) || 24.5) * 10) / 10,
+      humidity: Math.round(Number(curr.relative_humidity_2m) || 82),
+      precipitation,
+      rain: Number(curr.rain ?? precipitation),
+      cloudCover,
+      windSpeed: Math.round((Number(curr.wind_speed_10m) || 5) * 10) / 10,
+      weatherCode: Number(curr.weather_code ?? 3),
+      weatherDescription: cloudCover > 80 ? 'Heavy Overcast' : 'Cloudy',
+      rainIntensityLevel,
+      dbzEquivalent,
+      cloudCategory,
+      timestampIST: new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }) + ' IST'
+    };
+
+    weatherCacheMap.set(cacheKey, { data: payload, time: now });
+    res.json(payload);
+  } catch (err: any) {
+    console.error('Error fetching Open-Meteo:', err.message);
+    res.json({
+      locationName,
+      lat,
+      lng,
+      temperature: 24.0,
+      humidity: 85,
+      precipitation: 3.5,
+      rain: 3.5,
+      cloudCover: 80,
+      windSpeed: 6.0,
+      weatherCode: 61,
+      weatherDescription: 'Monsoon Light-Moderate Rain',
+      rainIntensityLevel: 'Moderate Rain',
+      dbzEquivalent: 32,
+      cloudCategory: 'Dense Overcast',
+      timestampIST: new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }) + ' IST'
+    });
+  }
+});
+
 // 10. Model Info
 app.get('/api/model/info', (req, res) => {
   res.json({

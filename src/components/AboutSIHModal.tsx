@@ -33,8 +33,8 @@ export const AboutSIHModal: React.FC<AboutSIHModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                  Smart India Hackathon (SIH)
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                  Early Warning Architecture
                 </span>
               </div>
               <h2 className="text-xl font-bold text-white mt-1">
@@ -68,10 +68,10 @@ export const AboutSIHModal: React.FC<AboutSIHModalProps> = ({
           <div className="bg-slate-950/80 border border-amber-500/30 rounded-2xl p-4 space-y-2">
             <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
               <Scale className="w-4 h-4" />
-              <span>Zero-Hardware Budget Hackathon Architecture</span>
+              <span>Zero-Hardware Budget Open Architecture</span>
             </div>
             <p className="leading-relaxed text-slate-300">
-              In strict adherence to the student hackathon constraints, Landsafe NER requires <strong>zero proprietary hardware</strong>, no expensive drone surveys, and no paid enterprise telemetry. Instead, it ingeniously synthesizes:
+              In contrast to capital-intensive physical sensor grids, Landsafe NER requires <strong>zero proprietary hardware</strong>, no expensive drone surveys, and no paid enterprise telemetry. Instead, it ingeniously synthesizes:
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
               <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 flex items-center gap-2">
@@ -123,9 +123,9 @@ export const AboutSIHModal: React.FC<AboutSIHModalProps> = ({
 
           {/* Scientific Disclaimer */}
           <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 space-y-1">
-            <strong className="text-slate-300">Responsible AI & Academic Disclaimer:</strong>
+            <strong className="text-slate-300">Responsible AI & Domain Disclaimer:</strong>
             <p>
-              This system is a Smart India Hackathon research prototype engineered for decision-support and academic demonstration. Predictions should be verified with field geotechnical instruments and official India Meteorological Department (IMD) / Geological Survey of India (GSI) advisories prior to emergency actions.
+              This system is an early-warning platform engineered for decision-support and academic demonstration. Predictions should be verified with field geotechnical instruments and official India Meteorological Department (IMD) / Geological Survey of India (GSI) advisories prior to emergency actions.
             </p>
           </div>
         </div>

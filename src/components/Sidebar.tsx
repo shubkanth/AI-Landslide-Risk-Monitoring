@@ -110,7 +110,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-t border-slate-800 text-[11px] text-slate-400 space-y-1">
         <div className="flex items-center justify-between text-slate-300">
           <span>Landsafe NER v1.2</span>
-          <span className="text-amber-400 font-medium">SIH 2024-25</span>
+          <span className="text-emerald-400 font-medium">Live Surveillance</span>
         </div>
         <p className="text-[10px] text-slate-400">
           Zero-Cost Open-Source Stack for North East Disaster Mitigation.

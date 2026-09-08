@@ -29,11 +29,11 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
     system: 'Landsafe NER AI Platform',
-    version: '1.2.0-sih-prototype',
+    version: '1.2.0',
     timestamp: new Date().toISOString(),
     geospatialEngine: 'Leaflet / PostGIS GeoAdapter',
     mlModel: 'XGBoost v1.4.2 (TreeSHAP Explainability Enabled)',
-    mode: 'Smart India Hackathon 2024-2025'
+    mode: 'Operational Regional Surveillance'
   });
 });
 
